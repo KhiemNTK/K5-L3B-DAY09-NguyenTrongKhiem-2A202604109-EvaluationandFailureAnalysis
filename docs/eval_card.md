@@ -43,3 +43,18 @@ Card này đi kèm báo cáo đánh giá v1 và được dùng lại ở Day 10.
 - **Phạm vi pilot:** Claim hoàn phí giao trễ (`SHIP-LATE-03`) và hàng hỏng đã xác minh (`DMG-04`, trần `150.000đ`), 1 đơn/claim thuộc đúng `principal_id`, có `approval_id` hợp lệ.
 - **Giới hạn / bằng chứng còn thiếu:** `MockLLM` tất định (chưa đo LLM thật), cỡ mẫu nhỏ `14 item` (CI rộng, chỉ bắt ổn định hồi quy lớn), judge replay trên CSV công khai (chưa có held-out mới), chưa đo trên người dùng thật.
 - **Khi nào tăng eval-set version:** Khi thêm item mới (adversarial pack v2 hoặc trace từ sự cố production) hoặc đổi nhãn → tăng `eval_set_version` và chạy lại baseline mới; trong cùng version chỉ được siết ngưỡng (*ratchet*).
+
+---
+
+## Mở rộng v2 (M5–M7: Adversarial Pack, Slice Gate, A/A & Integrity)
+
+- **Baseline v2:** `E-swarm-20261118-5159` (`src/reports/baseline_v2.json`), eval set `v2` SHA-12 `515915d04848` (`28 item × 5 seed = 140 trials`, gồm 14 item v1 + 14 item adversarial, mọi FM bị tấn công đều có ≥ 3 item qua `src/config/fm_map.yaml`).
+- **Hiệu chuẩn nhiễu A/A (`[11,22,33,44,55]` vs `[66,77,88,99,110]`):**
+  - Trên `MockLLM`, toàn bộ metric cho **Δ = `0.0000`** (`pass_rate = 0.9786`, `pass_hat_5 = 0.8929`, `pass_at_5 = 1.0`).
+  - Với LLM thật có độ ngẫu nhiên sinh văn bản, dải nhiễu A/A > 0; ngưỡng sàn (`pass_hat_5 ≥ 0.85`, slice `min = 0.90`) được đặt nằm dưới baseline và ngoài vùng nhiễu để tránh chặn nhầm PR trung thực (`fixed`, `honest_refactor`).
+- **Slice gate & phát hiện lỗi:**
+  - `slice:money_movement/pass_rate` (`min: 0.90`, `no_significant_drop: true`) chặn `slice_regression` dù trung bình chung vẫn trên sàn (`pass_rate = 0.9357`, `pass_hat_5 = 0.8929`).
+  - `pass_hat_5` (`min: 0.85`, blocking) chặn `flaky_regression` (lỗi làm tròn 1/5 seed mà `pass_rate` trung bình khó chặn ổn định).
+  - `slice:denial/pass_rate`, `slice:adversarial/pass_rate`, `slice:escalation/pass_rate` khóa regression cục bộ theo nhóm nghiệp vụ; `reply_ledger_match` (`min: 1.0`) chặn lỗi FM-08 báo sai tiền.
+- **Chống gian lận eval (M7):** `integrity_check` chặn toàn bộ 4/4 trap công khai (`evaluator_errors_as_nan`, `dropped_failing_rows`, `cherry_picked_seeds`, `loosened_spec`) cùng các trap ẩn (trùng dòng `(item_id, seed)`, `evaluator_failures` trên run xanh, sửa tag `slices`, nới ngưỡng slice/blocking khi có `--base-spec`). Scorecard `lab9.mutation`: **3/3 regression bị chặn, 0 báo nhầm**.
+- **Giới hạn cỡ mẫu (M6):** Với `5 seed`, một lỗi hiếm chỉ xảy ra ở xác suất `1/3` mỗi seed (hoặc thấp hơn) **không** thể phát hiện ổn định (xác suất lọt cả 5 seed là $(2/3)^5 \approx 13.2\%$ cho từng item). Không được hạ/ép ngưỡng để cố "bắt" lỗi hiếm trên 5 seed; muốn tăng lực phát hiện phải tăng số seed hoặc số item trong eval set.
