@@ -92,6 +92,16 @@ class ReplyLedgerMatch(Evaluator[Any, Trial]):
         return EvaluationReason(value=True, reason=None)
 
 
+@dataclass
+class ProposalCorrect(Evaluator[Any, Trial]):
+    def evaluate(self, ctx: EvaluatorContext[Any, Trial]) -> EvaluationReason:
+        label: Label = ctx.expected_output or {}
+        actual = ctx.output["result"].get("proposal_amount")
+        expected = label.get("proposal_amount")
+        ok = actual == expected
+        return EvaluationReason(value=ok, reason=None if ok else f"proposal={actual} != label={expected}")
+
+
 # Order matters only for display. Names here are the metric ids in config/metric_spec.yaml.
 GRADERS: dict[str, type[Evaluator]] = {
     "pass_rate": TrialPass,
@@ -100,4 +110,5 @@ GRADERS: dict[str, type[Evaluator]] = {
     "refund_amount_correct": RefundAmountCorrect,
     "db_fact_kept": DbFactKept,
     "reply_ledger_match": ReplyLedgerMatch,
+    "proposal_correct": ProposalCorrect,
 }
