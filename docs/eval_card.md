@@ -3,11 +3,11 @@
 Card này đi kèm báo cáo đánh giá v1 và được dùng lại ở Day 10.
 
 - **Run ID / eval set SHA:**
-  - Baseline (`swarm`): `E-swarm-20261118-a26f` (`src/reports/baseline_v1.json`)
-  - PR đạt (`fixed`): `E-fixed-20261118-a26f` (`src/reports/eval_fixed.json`)
-  - PR bị chặn (`seeded_regression`): `E-seeded_regression-20261118-a26f` (`src/reports/eval_seeded_regression.json`)
-  - Eval set SHA-12: `a26f085c2f8f`
-- **Phiên bản:** code nhánh `starter/d09` (cập nhật commit SHA khi merge) · eval set `v1` (`a26f085c2f8f`) · `metric_spec_version: "1.0"` · harness `pydantic-evals 2.68.0` · Python `3.12.10` · seeds `11/22/33/44/55` · `MockLLM`
+  - Baseline (`swarm`): `E-swarm-20261118-7998` (`src/reports/baseline_v1.json`)
+  - PR đạt (`fixed`): `E-fixed-20261118-7998` (`src/reports/eval_fixed.json`)
+  - PR bị chặn (`seeded_regression`): `E-seeded_regression-20261118-7998` (`src/reports/eval_seeded_regression.json`)
+  - Eval set SHA-12: `79989117d00a`
+- **Phiên bản:** code nhánh `starter/d09` (cập nhật commit SHA khi merge) · eval set `v1` (`79989117d00a`) · `metric_spec_version: "1.0"` · harness `pydantic-evals 2.68.0` · Python `3.12.10` · seeds `11/22/33/44/55` · `MockLLM`
 - **Eval set:** v1, `14 item × 5 seed = 70 trials`, nguồn `lab8_public` (`src/data/eval/eval_set_v1.jsonl`), nhãn tách riêng tại `src/data/eval/labels_v1.json` (`evalset --check`: `0 problem(s)`).
 
 ## Metric & ngưỡng (`src/config/metric_spec.yaml`)
