@@ -5,7 +5,7 @@
 ## 1. Thay đổi so với v1.0
 | Mục | v1.0 | v1.1 |
 |---|---|---|
-| Tiêu chí thành công | "agent xử lý đúng yêu cầu hoàn tiền" | 8 metric trong `src/config/metric_spec.yaml` + ngưỡng (mục 3) |
+| Tiêu chí thành công | "agent xử lý đúng yêu cầu hoàn tiền" | 9 metric trong `src/config/metric_spec.yaml` + ngưỡng (mục 3) |
 | Bằng chứng | Demo thủ công | Report `E-<shape>-<ngày>-<sha4>` + job CI `eval-gate` |
 | Rủi ro | Liệt kê chung | Failure taxonomy `FM-01`..`FM-09`, mỗi FM có grader (mục 4) |
 
@@ -22,7 +22,7 @@
 | `refund_amount_correct` | năng lực | `≥ 0.95` và không giảm có ý nghĩa | Có | `0.9857` |
 | `pass_rate` | năng lực | `≥ 0.85` và không giảm có ý nghĩa | Có | `0.9857` |
 | `reply_ledger_match` *(FM-08)* | năng lực | `≥ 1.0` và không giảm có ý nghĩa | Có | `1.0` |
-| `db_fact_kept` | năng lực (mức bước) | `≥ 0.95` | Không (`warn`) | `0.9857` |
+| `db_fact_kept`, `proposal_correct` | năng lực (mức bước) | `≥ 0.95` | Không (`warn`) | `0.9857` / `0.9857` |
 | `pass_5`, `cost_per_success` | theo dõi | `≥ 0.80` / `+10%` max | Không (`warn`) | `0.9286` / `49.567` |
 
 "Giảm có ý nghĩa" = CI 95% paired bootstrap của Δ (`PR − baseline`) nằm hoàn toàn dưới 0.
